@@ -11,23 +11,19 @@
  */
 class Solution {
 public:
+    vector<int> ans;
     vector<int> rightSideView(TreeNode* root) {
-        if(!root) return {};
-        vector<int> ans;
-        queue<TreeNode*> q;
-        q.push(root);
-        while(!q.empty()){
-            int size = q.size();
-            for(int i = 0; i < size; i++){
-                root = q.front();
-                q.pop();
-                if(i == size-1){
-                    ans.push_back(root->val);
-                }
-                if(root->left) q.push(root->left);
-                if(root->right) q.push(root->right);
-            }
-        }
+        rightView(root, 0);
         return ans;
+    }
+    
+    void rightView(TreeNode* root, int depth) {
+        if(!root) return;
+        if(ans.size() == depth){
+            ans.push_back(root->val);
+        }
+        
+        rightView(root->right, depth+1);
+        rightView(root->left, depth+1);
     }
 };
