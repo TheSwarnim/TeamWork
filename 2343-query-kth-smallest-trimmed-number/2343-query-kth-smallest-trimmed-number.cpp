@@ -1,16 +1,33 @@
 class Solution {
 public:
     vector<int> smallestTrimmedNumbers(vector<string>& nums, vector<vector<int>>& queries) {
-        vector<int> res;
-        int n = nums.size();
-        for(auto &q:queries) {
-            vector<pair<string,int>> pq;
-            for(int i=0;i<n; i++) {
-                pq.push_back({(nums[i].substr(nums[i].size()-q[1])), i});
-            }
-            sort(pq.begin(), pq.end());
-            res.push_back(pq[q[0]-1].second);
+        int n = nums.size(), strsize = nums[0].size();
+        // the approach is to pre calculate early and give answer as per the queries as per the index required
+        unordered_map<int, vector<pair<string, int>>> lis;
+        
+        vector<int> ans;
+        for(auto &q : queries){
+            int k = q[0], trim = q[1];
+            if(lis.find(trim-1) == lis.end())
+                calcForIthIndex(lis, trim-1, strsize, nums); 
+            ans.push_back(lis[trim-1][k-1].second);
         }
-        return res;
+        return ans;
+    }
+    
+    void calcForIthIndex(unordered_map<int, vector<pair<string, int>>> &lis, int idx, int strsize, vector<string>& nums){
+        for(int j = 0; j < nums.size(); j++){
+            string substr = nums[j].substr(strsize-1-idx);
+            lis[idx].push_back({substr, j});
+        }
+        
+        auto &l = lis[idx];
+        
+        // time to sort the array
+        sort(begin(l), end(l), [&](pair<string, int> &a, pair<string, int> &b){
+            // cout << a.first << " " << b.first << " " << a.second << " " << b.second << endl;
+            string &s1 = a.first, &s2 = b.first; // needs to over optimize it as copying the string is giving tle but pointing it gives ac
+            return s1 == s2 ? a.second < b.second : s1.compare(s2) < 0; 
+        });
     }
 };
