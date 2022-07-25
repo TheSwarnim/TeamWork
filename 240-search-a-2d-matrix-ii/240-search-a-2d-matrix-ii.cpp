@@ -1,15 +1,15 @@
 class Solution {
 public:
-    #define all(c) (c).begin(), (c).end()
-    
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        for(int i = 0; i < matrix.size(); i++){
-            auto it = lower_bound(all(matrix[i]), target);
-            if(it != end(matrix[i])){
-                int idx = it - begin(matrix[i]);
-                if(matrix[i][idx] == target) return true;
-                // else continue;
-            }
+        int m = matrix.size(), n = matrix[0].size();
+        int row = 0, col = n-1;
+        while(row < m && col >= 0){
+            if(matrix[row][col] == target)
+                return true;
+            else if(matrix[row][col] < target)
+                row++;
+            else if(matrix[row][col] > target)
+                col--;
         }
         return false;
     }
