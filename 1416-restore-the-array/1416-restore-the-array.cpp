@@ -2,24 +2,21 @@ class Solution {
 public:
     int mod = 1e9 + 7;
     typedef long long ll;
-    
-    ll dp[int(1e5+1)] = {};
+    ll dp[100001] = {};
     int numberOfArrays(string s, int k) {
-        return dfs(s, 0, k);
-    }
-    
-    int dfs(string &s, int i, int k){
-        if(i == s.length())
-            return 1;
-        if(s[i] == '0')
-            return 0;
-        if(dp[i] == 0){
-            for(ll sz = 1, val = 0; i+sz <= s.length(); sz++) {
-                val = val*10 + s[i+sz-1] - '0';
-                if(val > k) break;
-                dp[i] = (dp[i] + dfs(s, i+sz, k)) % mod;
+        int n = s.length();
+        fill(dp, dp+n, 0);
+        for(int i = n; i >= 0; i--){
+            if(i == n) dp[n] = 1;
+            else if(s[i] == '0') dp[i] = 0;
+            else {
+                for(ll j = 1, val = 0; j+i <= n; j++){
+                    val = val*10 + s[i+j-1] - '0';
+                    if(val > k) break;
+                    dp[i] = (dp[i] + dp[i+j]) % mod;
+                }
             }
         }
-        return dp[i];
+        return dp[0];
     }
 };
