@@ -1,1 +1,1 @@
-​
+The key point for any binary search is to figure out the "Search Space". For me, I think there are two kind of "Search Space"
