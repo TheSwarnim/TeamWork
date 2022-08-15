@@ -1,0 +1,2 @@
+See this post: https://leetcode.com/problems/count-special-integers/discuss/2422090/C%2B%2B-with-explanation-Digit-Dynamic-Programming
+See this dp series videos for more such questions: https://www.youtube.com/playlist?list=PLX4N9vQU5pGbdcwmJA1or5yOLuZl3gNTO
