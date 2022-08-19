@@ -1,23 +1,25 @@
 class Solution {
 public:
     bool isPossible(vector<int>& nums) {
-        unordered_map<int, priority_queue<int, vector<int>, greater<int>>> mp;
-        for(int &x : nums){
-            auto &pq = mp[x-1];
-            if(pq.empty()){
-                mp[x].push(1);
-            } else {
-                int val = pq.top();
-                pq.pop();
-                mp[x].push(val+1);
-            }
-        }
+        // borrowed from lee
         
-        for(auto &vals : mp){
-            auto &pq = vals.second;
-            while(!pq.empty()){
-                if(pq.top() < 3) return false;
-                pq.pop();
+        map<int, int> end, left;
+        // left contains all left elements of nums
+        // end contains all elements which end with 'i' having atleast 3 elements in it
+        for(int &x : nums) left[x]++;
+        
+        for(int i : nums){
+            if(left[i] == 0) continue;
+            left[i]--;
+            if(end[i-1] > 0){
+                end[i-1]--;
+                end[i]++;
+            } else if(left[i+1]  > 0 && left[i+2] > 0){
+                left[i+1]--;
+                left[i+2]--;
+                end[i+2]++;
+            } else {
+                return false;
             }
         }
         
