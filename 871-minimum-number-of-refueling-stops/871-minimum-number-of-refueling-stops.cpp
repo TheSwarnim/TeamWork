@@ -1,16 +1,17 @@
 class Solution {
 public:
     int minRefuelStops(int target, int startFuel, vector<vector<int>>& s) {
-        long dp[501] = {startFuel};
-        // dp[i] = maximum distance we can go with ith fueling
-        for(int i = 0; i < s.size(); i++){
-            for(int t = i; t >= 0 && dp[t] >= s[i][0]; t--){
-                dp[t+1] = max(dp[t+1], dp[t] + s[i][1]);
+        if(startFuel >= target) return 0;
+        int n = s.size(), maxdist = startFuel, stops = 0, i = 0;
+        priority_queue<int> pq;
+        while(maxdist < target){
+            while(i < n && maxdist >= s[i][0]){
+                pq.push(s[i++][1]);
             }
+            if(pq.empty()) return -1;
+            maxdist += pq.top(); pq.pop();
+            stops++;
         }
-        for(int t = 0; t <= s.size(); t++){
-            if(dp[t] >= target) return t;
-        }
-        return -1;
+        return stops;
     }
 };
