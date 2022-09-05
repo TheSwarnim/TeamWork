@@ -1,45 +1,17 @@
-/*
-// Definition for a Node.
-class Node {
-public:
-    int val;
-    vector<Node*> children;
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+"""
 
-    Node() {}
-
-    Node(int _val) {
-        val = _val;
-    }
-
-    Node(int _val, vector<Node*> _children) {
-        val = _val;
-        children = _children;
-    }
-};
-*/
-
-class Solution {
-public:
-    vector<vector<int>> levelOrder(Node* root) {
-        if(!root){
-            return {};
-        }
-        queue<Node*> q;
-        q.push(root);
-        vector<vector<int>> res;
-        while(!q.empty()){
-            int size = q.size();
-            vector<int> arr;
-            for(int i =0 ;  i < size; i++){
-                root = q.front();
-                q.pop();
-                arr.push_back(root->val);
-                for(auto &child : root->children){
-                    q.push(child);
-                }
-            }
-            res.push_back(arr);
-        }
-        return res;
-    }
-};
+class Solution:
+    def levelOrder(self, root: 'Node') -> List[List[int]]:
+        if not root:
+            return []
+        q, res = [root], []
+        while q:
+            res.append([node.val for node in q])
+            q = [child for node in q for child in node.children if child]
+        return res
