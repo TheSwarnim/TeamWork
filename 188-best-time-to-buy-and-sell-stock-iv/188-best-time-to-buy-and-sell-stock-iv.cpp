@@ -2,22 +2,24 @@ class Solution {
 public:
     int maxProfit(int k, vector<int>& prices) {
         int n = prices.size();
-        int dp[k+1][n+1];
+        
+        if(k >= n/2){
+            int res = 0;
+            for(int i = 1; i < n; i++){
+                res += max(0, prices[i] - prices[i-1]);
+            }
+            return res;
+        }
+        
+        int dp[k+1][n];
         memset(dp, 0, sizeof(dp));
-        for(int i = 0; i <= k; i++){
-            for(int j = 0; j <= n; j++){
-                if(i == 0 || j == 0){
-                    dp[i][j] = 0;
-                } else {
-                    int res = dp[i][j-1];
-                    for(int k = 1; k < j; k++){
-                        // cout << dp[i-1][k] << " " << prices[j-1] << " " << prices[k-1] << endl;
-                        res = max(res, dp[i-1][k] + prices[j-1] - prices[k-1]);
-                    }
-                    dp[i][j] = res;
-                }
+        for(int i = 1; i <= k; i++){
+            int localMax = dp[i-1][0] - prices[0];
+            for(int j = 1; j < n; j++){
+                dp[i][j] = max(dp[i][j-1], prices[j] + localMax);
+                localMax = max(localMax, dp[i-1][j] - prices[j]);
             }
         }
-        return dp[k][n];
+        return dp[k][n-1];
     }
 };
