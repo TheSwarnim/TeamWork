@@ -1,37 +1,24 @@
 class Solution {
-    int[] res;
-    int[] count;
-    List<Integer>[] graph;
-    
+    List<Integer> []graph;
+    int[] res, count;
     public int[] sumOfDistancesInTree(int n, int[][] edges) {
-        /*
-        assume 0 as root,
-        find solution for root,
-        use re-rooting technique to find the solution for every node
-        
-        res -> store the result for ith node
-        count -> store the count of nodes including itself
-        that comes in this sub tree by assuming the root as 0
-        */
-        
         res = new int[n];
         count = new int[n];
-        
+
         graph = new List[n];
         for(int i = 0; i < n; i++){
             graph[i] = new ArrayList<>();
         }
+        
         for(int[] e : edges){
             graph[e[0]].add(e[1]);
             graph[e[1]].add(e[0]);
         }
         
-        // this will find solution of node 0
+        // preorder dfs
         dfs(0, -1);
         
-        // this will find the solution for all nodes
-        // all parents will find the answer for thier childs
-        // and all childs will find solution for there childs
+        // postorder dfs
         dfs2(0, -1, n);
         
         return res;
@@ -39,7 +26,9 @@ class Solution {
     
     void dfs2(int node, int parent, int n){
         for(int chNode : graph[node]){
-            if(chNode == parent) continue;
+            if(chNode == parent){
+                continue;
+            }
             
             res[chNode] = res[node] - count[chNode] + n - count[chNode];
             dfs2(chNode, node, n);
@@ -48,11 +37,13 @@ class Solution {
     
     void dfs(int node, int parent){
         for(int chNode : graph[node]){
-            if(chNode == parent) continue;
+            if(chNode == parent) {
+                continue;
+            }
             
             dfs(chNode, node);
             count[node] += count[chNode];
-            res[node] += res[chNode] + count[chNode];
+            res[node] += res[chNode] + count[chNode]; // res[chNode] : result of subtree whith root chNode and count[chNode] will give the answer of node as the increment is count of all nodes of chNode subtree
         }
         count[node] += 1;
     }
