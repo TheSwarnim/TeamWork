@@ -1,28 +1,33 @@
 class Solution {
     public int search(int[] nums, int target) {
-        int l = 0, h = nums.length - 1;
-        while(l < h){
-            int m = (h-l)/2 + l;
-            if(nums[m] > nums[h]) {
-                l = m+1;
-            } else {
-                h = m;
-            }
+        if(nums == null || nums.length == 0){
+            return -1;
         }
         
-        int idx = l;
-        l = 0;
-        h = nums.length - 1;
-        while(l <= h){
-            int m = (h-l)/2 + l;
-            int realmid = (m+idx)%nums.length;
-            if(nums[realmid] == target){
-                return realmid;
-            } 
-            if(nums[realmid] < target){
-                l = m+1;
-            } else {
-                h = m-1;
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left)/2;
+            if(target == nums[mid]){
+                return mid;
+            }
+            
+            // left part is monotolically increasing
+            if(nums[left] <= nums[mid]){
+                if(nums[left] <= target && target < nums[mid]){
+                    right = mid-1;
+                }
+                else {
+                    left = mid + 1;
+                }
+            }
+            // if right part is monotonically increasing
+            else {
+                if(nums[mid] < target && target <= nums[right]){
+                    left = mid + 1;
+                } 
+                else {
+                    right = mid - 1;
+                }
             }
         }
         return -1;
