@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public String tree2str(TreeNode root) {
+        return dfs(root);
+    }
+    
+    String dfs(TreeNode root){
+        if(root == null){
+            return "";
+        }
+        
+        StringBuilder res = new StringBuilder(); 
+        res.append(root.val);
+        
+        String left = dfs(root.left);
+        String right = dfs(root.right);
+        
+        if(!right.equals("")){
+            res.append("(" + left + ")(" + right + ")");
+        } else if(!left.equals("")){
+            res.append("(" + left + ")");
+        }
+        
+        return res.toString();
+    }
+}
