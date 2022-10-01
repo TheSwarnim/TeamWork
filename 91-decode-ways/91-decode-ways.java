@@ -1,8 +1,26 @@
 class Solution {
     public int numDecodings(String s) {
-        dp = new int[s.length()];
+        int n = s.length();
+        dp = new int[n+1];
         Arrays.fill(dp, -1);
-        return findNumDecodings(s, 0);
+        dp[n] = 1;
+        // return findNumDecodings(s, 0);
+        
+        for(int i = n-1; i >= 0; i--){
+            char c = s.charAt(i);
+            
+            if(c == '0'){
+                dp[i] = 0;
+            } else {
+                dp[i] = dp[i+1];
+                
+                if(i < n-1 && (c == '1' || c == '2' && s.charAt(i+1) < '7')){
+                    dp[i] += dp[i+2];
+                }
+            }
+        }
+        
+        return dp[0];
     }
     
     int[] dp;
