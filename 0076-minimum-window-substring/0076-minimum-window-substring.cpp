@@ -1,35 +1,17 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int tcnt[150], cnt[150];
-        memset(tcnt, 0, sizeof(tcnt));
-        memset(cnt, 0, sizeof(cnt));
-        
-        for(int i = 0; i < t.size(); i++){
-            tcnt[t[i]]++;
-        }
-        
-        int x = INT_MAX, y = INT_MAX;
-        for(int i = 0, j = 0; i < s.size(); i++){
-            cnt[s[i]]++;
-            while(j < i && (tcnt[s[j]] == 0 || tcnt[s[j]] < cnt[s[j]])){
-                cnt[s[j++]]--;
-            }
-            bool flag = true;
-            for(int i = 0; i < 150; i++){
-                if(cnt[i] < tcnt[i]){
-                    flag = false;
-                    break;
-                }
-            }
-            if(flag){
-                if(x == INT_MAX || (y - x + 1) > (i - j + 1)){
-                    x = j;
-                    y = i;
-                }
+        vector<int> map(128, 0);
+        for(auto c : t) map[c]++;
+        int counter = t.size(), begin = 0, end = 0, d = INT_MAX, head = 0;
+        while(end < s.size()){
+            if(map[s[end++]]-- > 0) counter--;
+            while(counter == 0){
+                if(end-begin < d) d = end - (head=begin);
+                if(map[s[begin++]]++ == 0) counter++;
             }
         }
         
-        return x == INT_MAX ? "" : s.substr(x, y - x + 1);
+        return d == INT_MAX ? "" : s.substr(head, d);
     }
 };
