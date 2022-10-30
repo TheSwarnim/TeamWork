@@ -1,36 +1,55 @@
 class Solution {
 public:
     int shortestPath(vector<vector<int>>& grid, int k) {
-        int m = grid.size(), n = grid[0].size();
-        vector<vector<vector<bool>>> seen(m, vector<vector<bool>>(n, vector<bool>(k + 1, false)));
+        int n = grid.size(), m = grid[0].size();
         
-        queue<int> qr, qc, removed;
-        qr.push(0);
-        qc.push(0);
-        removed.push(grid[0][0]);
-        seen[0][0][0] = true;
-        int offset[] = {0, -1, 0, 1, 0};
-        int steps = 0;
-        while(!qr.empty()) {
-            int sz = qr.size();
-            for(int x = 0; x < sz; x++) {
-                int r = qr.front(); qr.pop();
-                int c = qc.front(); qc.pop();
-                int obs = removed.front(); removed.pop();
-                if(r == m - 1 && c == n - 1) return steps;
-                for(int i = 0; i < 4; i++) {
-                    int rr = r + offset[i];
-                    int cc = c + offset[i + 1];
-                    if(rr < 0 || rr >= m || cc < 0 || cc >= n || obs + grid[r][c] > k || seen[rr][cc][obs + grid[r][c]])
-                        continue;
-                    seen[rr][cc][obs + grid[r][c]] = true;
-                    qr.push(rr);
-                    qc.push(cc);
-                    removed.push(obs + grid[r][c]);
+        bool visited[n][m][k+1];
+        memset(visited, 0, sizeof(visited));
+        
+        queue<tuple<int, int, int>> q; // x,y,kused
+        q.push({0, 0, k});
+        
+        int res = 0;
+        
+        while(!q.empty()){
+            
+            int size = q.size();
+            while(size-- > 0){
+                
+                auto [x,y,kk] = q.front(); q.pop();
+                
+                // if visited then return
+                if(visited[x][y][kk]){
+                    continue;
+                }
+                visited[x][y][kk] = true;
+                
+                // if last corner then return
+                if(x == n-1 && y == m-1){
+                    return res;
+                }
+                
+                kk -= grid[x][y];
+                // kk is neg then it means we can't proceed
+                if(kk < 0){
+                    continue;
+                }
+                
+                for(int d = 0; d < 4; d++){
+                    int i = x + dir[d];
+                    int j = y + dir[d+1];
+                    
+                    if(i >= 0 && j >= 0 && i < n && j < m){
+                        q.push({i, j, kk});
+                    }
                 }
             }
-            steps++;
+            
+            res++;
         }
+        
         return -1;
     }
+    
+    vector<int> dir = {0, 1, 0, -1, 0};
 };
