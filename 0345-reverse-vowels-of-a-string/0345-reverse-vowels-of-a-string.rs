@@ -1,21 +1,34 @@
 impl Solution {
+    pub fn is_vowel(c: char) -> bool {
+        matches!(c, 'a' | 'e' | 'i' | 'o' | 'u' | 'A' | 'E' | 'I' | 'O' | 'U')
+    }
+    
     pub fn reverse_vowels(s: String) -> String {
-        let is_vowel = |b: u8| matches!(b, b'a' | b'e' | b'i' | b'o' | b'u' | b'A' | b'E' | b'I' | b'O' | b'U');
-        let mut vb = s.into_bytes();
-        let (mut i, mut j) = (0, vb.len() - 1);
-        while i < j {
-            while i < j && !is_vowel(vb[i]) {
-                i += 1;
-            }
-            while i < j && !is_vowel(vb[j]) {
-                j -= 1;
-            }
-            if i < j {
-                vb.swap(i, j);
-                i += 1;
-                j -= 1;
+        let mut a : Vec<char> = s.chars().collect();
+        let n = a.len();
+        
+        if n == 0 {
+            return "".to_string();
+        }
+        
+        let mut l = 0;
+        let mut r = n - 1;
+        
+        while l < r {
+            if Self::is_vowel(a[l]) && Self::is_vowel(a[r]) {
+                a.swap(l, r);
+                l += 1;
+                r -= 1;
+            } else {
+                if !Self::is_vowel(a[l]) {
+                    l += 1;
+                }
+                if !Self::is_vowel(a[r]) {
+                    r -= 1;
+                }
             }
         }
-        String::from_utf8(vb).unwrap()
+        
+        a.iter().collect()
     }
 }
