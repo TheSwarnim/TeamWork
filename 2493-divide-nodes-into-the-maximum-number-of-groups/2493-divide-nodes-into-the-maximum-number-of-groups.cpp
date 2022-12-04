@@ -26,7 +26,7 @@ class Solution {
                     if(levels[child] == -1){
                         q.push(child);
                     } else {
-                        if(levels[child] != cur_level+1
+                        if(levels[child] != cur_level
                  && levels[child] != cur_level-1){
                             return -1;
                         }
